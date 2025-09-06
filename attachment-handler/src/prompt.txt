@@ -1,0 +1,10 @@
+Analyze this bill/invoice PDF and extract information from each one.
+
+Return your response as a JSON object that conforms to this JSON schema:
+{AGENT_RESPONSE_SCHEMA}
+
+Rules:
+- If you cannot determine the amount for a document DO NOT try to guess use 0
+- If you cannot determine a date field for the document DO NOT try to guess use today's date
+- If you cannot determine the value for any other property DO NOT try to guess use 'Unknown'
+- Return ONLY a single-line, minified JSON object with no whitespace, no newlines, no indentation, and no additional text

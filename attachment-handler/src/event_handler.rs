@@ -4,6 +4,7 @@ use aws_lambda_events::event::s3::S3Event;
 use aws_sdk_bedrockruntime::primitives::Blob;
 use aws_sdk_bedrockruntime::types::{ContentBlock, ConversationRole, ConverseOutput, DocumentBlock, DocumentFormat, DocumentSource, Message};
 
+const PROMPT: &str = include_str!("prompt.txt");
 const AGENT_RESPONSE_SCHEMA: &str = include_str!("agent-response-schema.json");
 
 pub(crate)async fn function_handler(event: LambdaEvent<S3Event>) -> Result<(), Error> {
@@ -18,16 +19,7 @@ pub(crate)async fn function_handler(event: LambdaEvent<S3Event>) -> Result<(), E
     let s3_client = aws_sdk_s3::Client::new(&aws_config);
     let sqs_client = aws_sdk_sqs::Client::new(&aws_config);
 
-    let prompt = format!("Analyze this bill/invoice PDF and extract information from each one.
-
-Return your response as a JSON object that conforms to this JSON schema:
-{AGENT_RESPONSE_SCHEMA}
-
-Rules:
-- If you cannot determine the amount for a document DO NOT try to guess use 0
-- If you cannot determine a date field for the document DO NOT try to guess use today's date
-- If you cannot determine the value for any other property DO NOT try to guess use 'Unknown'
-- Return ONLY a single-line, minified JSON object with no whitespace, no newlines, no indentation, and no additional text");
+    let prompt = PROMPT.replace("{AGENT_RESPONSE_SCHEMA}", AGENT_RESPONSE_SCHEMA);
 
     for record in payload.records {
         let bucket = record.s3.bucket.name.expect("no s3 bucket name");
