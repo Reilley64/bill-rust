@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "enum": ["Internet", "Energy", "Hot Water", "Owners Corporation", "Unknown"],
+      "description": "Subject of the bill"
+    },
+    "company": {
+      "type": "string",
+      "description": "Name of the company or service provider issuing the bill"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "The date the bill is due"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Total amount to be paid as a decimal number"
+    }
+  },
+  "required": ["subject", "company", "date", "amount"],
+  "additionalProperties": false
+}
